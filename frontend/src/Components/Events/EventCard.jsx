@@ -3,9 +3,9 @@ import styles from "../../styles/styles";
 import CountDown from "./CountDown"; // You can replace or remove this if needed
 import { Link } from "react-router-dom";
 
-const EventCard = () => {
+const EventCard = ({active}) => {
   return (
-    <div className="w-full block bg-white rounded-lg shadow-md mb-18 lg:flex p-4">
+    <div className={`w-full block bg-white rounded-lg ${active ? "unset" : "mb-12"}  shadow-md mb-18 lg:flex p-4`}>
       {/* Left: Image */}
       <div className="w-full lg:w-1/2 flex justify-center items-center">
         <img

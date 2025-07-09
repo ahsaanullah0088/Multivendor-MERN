@@ -1,6 +1,10 @@
 
+const express = require('express');
+
 const app = require('./app');
 const connectDatabase = require('./db/database');
+
+app.use("/uploads", express.static("uploads"));
 
 
 // handle uncaught exceptions

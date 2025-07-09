@@ -12,13 +12,21 @@ import { BiMenuAltLeft } from "react-icons/bi";
 import DropDown from "./DropDown.jsx";
 import Navbar from "./Navbar.jsx";
 import { CgProfile } from "react-icons/cg";
+import { useSelector } from "react-redux";
+import { backend_url } from "../../server.js";
+
 
 const Header = ({ activeHeading }) => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
-
+  console.log("isAuthenticated", isAuthenticated);
+  // console.log("user avatar", user?.avatar);
+  // console.log('userstate',state);
+  console.log("user state", user);
+console.log(user)
   useEffect(() => {
     const handleScroll = () => {
       setActive(window.scrollY > 70);
@@ -26,6 +34,7 @@ const Header = ({ activeHeading }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -155,11 +164,15 @@ const Header = ({ activeHeading }) => {
                 </span>
               </div>
               <div className="relative cursor-pointer mr-[15px]">
-                <Link to = "/login">
-                              <CgProfile
-              size={30}
-              color="rgb(255 255 255 /83%)"/>
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/profile">
+                    <img src={` ${backend_url}${user.avatar}`} alt="" />
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <CgProfile size={30} color="rgb(255 255 255 /83%)" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

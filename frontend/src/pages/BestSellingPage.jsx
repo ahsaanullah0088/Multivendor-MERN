@@ -1,27 +1,19 @@
 import React, { useEffect } from 'react'
 import Header from '../Components/Layout/Header'
 import styles from '../styles/styles'
-import { useSearchParams } from 'react-router-dom'
 import { productData } from '../static/data'
 import ProductCard from '../Components/Routes/ProductCard/ProductCard'
 
-const ProductsPage = () => {
-  const [searchParams] = useSearchParams();
-  const categorydata = searchParams.get('category');
+const BestSellingPage = () => {
   const [data , setData] = React.useState([]);
 
   useEffect(() =>{
-    if(categorydata === null){
-      const d = productData && productData.sort((a, b) => a.total_sell - b.total_sell);
-      setData(d);
-    } else {
-      const d = productData.filter((i) => i.category === categorydata);
-      setData(d);
-    }
+    const d = productData && productData.sort((a, b) => b.total_sell - a.total_sell);
+    setData(d);
   })
   return (
     <div>
-      <Header activeHeading={3}/>
+      <Header activeHeading={2}/>
       <br />
       <br />
       <div className={`${styles.section}`}>
@@ -30,13 +22,9 @@ const ProductsPage = () => {
             data && data.map((i, index)=> <ProductCard data={i} key={index}/>)
           }
         </div>
-                  {
-            data && data.length === 0 ?( <h1 className='text-center text-2xl font-semibold'>No Products Found</h1>
-            ):null
-          }
       </div>
     </div>
   )
 }
 
-export default ProductsPage
+export default BestSellingPage

@@ -2,6 +2,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ActivationPage from "./pages/ActivationPage.jsx";
 import Homepage from "./pages/Homepage.jsx"
-export { LoginPage,
+import ProductsPage from "./pages/ProductsPage.jsx";
+export { LoginPage,ProductsPage,
     SignUpPage, ActivationPage , Homepage,
   };

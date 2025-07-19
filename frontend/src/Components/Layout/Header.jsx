@@ -13,7 +13,6 @@ import DropDown from "./DropDown.jsx";
 import Navbar from "./Navbar.jsx";
 import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
-import { backend_url } from "../../server.js";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -21,6 +20,7 @@ const Header = ({ activeHeading }) => {
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
+  console.log( "isauthenticated", isAuthenticated);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -157,10 +157,13 @@ const Header = ({ activeHeading }) => {
                   0
                 </span>
               </div>
-              <div className="relative cursor-pointer mr-[15px]">
+              <div className="relative cursor-pointer mr-[15px] ">
                 {isAuthenticated ? (
                   <Link to="/profile">
-                    <img src={` ${backend_url}${user.avatar}`} alt="" />
+                    <img
+                      className="h-8 w-8 rounded-full" src={user?.avatar?.url
+                      ? user.avatar.url
+                      : "https://via.placeholder.com/96"} alt="" />
                   </Link>
                 ) : (
                   <Link to="/login">

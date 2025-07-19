@@ -1,15 +1,16 @@
 import axios from "axios";
 import { server } from "../../server";
 
-// load user
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({
       type: "LoadUserRequest",
     });
+
     const { data } = await axios.get(`${server}/user/getuser`, {
       withCredentials: true,
     });
+
     dispatch({
       type: "LoadUserSuccess",
       payload: data.user,
@@ -17,12 +18,11 @@ export const loadUser = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "LoadUserFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Failed to load user",
     });
   }
 };
 
-// load seller
 export const loadSeller = () => async (dispatch) => {
   try {
     dispatch({
@@ -43,7 +43,6 @@ export const loadSeller = () => async (dispatch) => {
   }
 };
 
-// user update information
 export const updateUserInformation =
   (name, email, phoneNumber, password) => async (dispatch) => {
     try {
@@ -79,7 +78,6 @@ export const updateUserInformation =
     }
   };
 
-// update user address
 export const updatUserAddress =
   (country, city, address1, address2, zipCode, addressType) =>
   async (dispatch) => {
@@ -116,7 +114,6 @@ export const updatUserAddress =
     }
   };
 
-// delete user address
 export const deleteUserAddress = (id) => async (dispatch) => {
   try {
     dispatch({
@@ -143,7 +140,6 @@ export const deleteUserAddress = (id) => async (dispatch) => {
   }
 };
 
-// get all users --- admin
 export const getAllUsers = () => async (dispatch) => {
   try {
     dispatch({

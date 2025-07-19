@@ -15,18 +15,13 @@ import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
 import { backend_url } from "../../server.js";
 
-
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
-  console.log("isAuthenticated", isAuthenticated);
-  // console.log("user avatar", user?.avatar);
-  // console.log('userstate',state);
-  console.log("user state", user);
-console.log(user)
+
   useEffect(() => {
     const handleScroll = () => {
       setActive(window.scrollY > 70);
@@ -34,7 +29,6 @@ console.log(user)
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
 
   const handleSearchChange = (e) => {
     const term = e.target.value;

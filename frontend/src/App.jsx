@@ -8,18 +8,19 @@ import {
   ProductsPage,
   BestSellingPage,
   FaqPage,
+  ProfilePage,
 } from "./Routes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux"; // ✅ useDispatch hook
+import { useDispatch } from "react-redux";
 import { loadUser } from "./redux/actions/user.js";
 
 function App() {
-  const dispatch = useDispatch(); // ✅ get dispatch function
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadUser()); // ✅ now reactively dispatches
+    dispatch(loadUser());
   }, [dispatch]);
 
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/best-selling" element={<BestSellingPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FaqPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
 
       <ToastContainer

@@ -1,35 +1,49 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUser } from "../../redux/actions/user";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuthenticated, loading } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios
-      .post(
+    try {
+      console.log("Attempting login with:", { email, password });
+
+      const response = await axios.post(
         `${server}/user/login-user`,
         { email, password },
         {
           withCredentials: true,
         }
-      )
-      .then((res) => {
-        toast.success("Login Successfully!");
-        navigate("/");
-        window.location.reload();
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+      );
+
+      console.log("Login response:", response.data);
+      toast.success("Login Successfully!");
+
+      console.log("Dispatching loadUser action...");
+      dispatch(loadUser());
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error(err.response?.data?.message || "Login failed");
+    }
   };
 
   return (

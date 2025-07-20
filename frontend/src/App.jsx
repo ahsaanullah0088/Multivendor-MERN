@@ -5,10 +5,10 @@ import {
   EventsPage,
   Homepage,
   ActivationPage,
-  ProductsPage,
   BestSellingPage,
   FaqPage,
   ProfilePage,
+  ProductsDetailsPage,
 } from "./Routes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,11 +33,13 @@ function App() {
           path="/activation/:activation_token"
           element={<ActivationPage />}
         />
-        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products" element={<ProductsDetailsPage />} />
         <Route path="/best-selling" element={<BestSellingPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/product/:id" element={<ProductsDetailsPage />} />
+
       </Routes>
 
       <ToastContainer

@@ -71,10 +71,10 @@ const ProductDetails = ({ data }) => {
                 <p>{data.description}</p>
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                    {data.discountPrice}$
+                    {data.discount_price}$
                   </h4>
                   <h3 className={`${styles.price}`}>
-                    {data.originalPrice ? data.originalPrice + "$" : null}
+                    {data.price ? data.price + "$" : null}
                   </h3>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
@@ -95,25 +95,31 @@ const ProductDetails = ({ data }) => {
                       +
                     </button>
                   </div>
-                  <div>
-                    {click ? (
-                      <AiFillHeart
-                        size={30}
-                        className="cursor-pointer"
-                        // onClick={() => removeFromWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
-                        title="Remove from wishlist"
-                      />
-                    ) : (
-                      <AiOutlineHeart
-                        size={30}
-                        className="cursor-pointer"
-                        // onClick={() => addToWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
-                        title="Add to wishlist"
-                      />
-                    )}
-                  </div>
+<div>
+  {click ? (
+    <AiFillHeart
+      size={30}
+      className="cursor-pointer"
+      onClick={() => {
+        // removeFromWishlistHandler(data);
+        setClick(!click); // Toggle the click state
+      }}
+      color={click ? "red" : "#333"}
+      title="Remove from wishlist"
+    />
+  ) : (
+    <AiOutlineHeart
+      size={30}
+      className="cursor-pointer"
+      onClick={() => {
+        // addToWishlistHandler(data);
+        setClick(!click); // Toggle the click state
+      }}
+      color={click ? "red" : "#333"}
+      title="Add to wishlist"
+    />
+  )}
+</div>
                 </div>
                 <div
                   className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}

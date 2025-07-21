@@ -450,7 +450,7 @@ const PaymetMethod = () => {
       <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
         <div className="flex items-center">
           <img src="https://www.logo.wine/a/logo/Visa_Inc./Visa_Inc.-Logo.wine.svg" alt="" className="w-12 h-9"/>
-          <h5 className="pl-5 font-[600] "> Zulkifal Raees</h5>
+          <h5 className="pl-5 font-[600] "> Ahsaan Ullah</h5>
           
         </div>
         <div className="pl-8 flex items-center">

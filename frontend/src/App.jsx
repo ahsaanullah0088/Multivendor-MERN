@@ -9,15 +9,18 @@ import {
   FaqPage,
   ProfilePage,
   ProductsDetailsPage,
+  
 } from "./Routes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./redux/actions/user.js";
-
+import ProtectedRoute from "./ProtectedRoute";
 function App() {
+  const { isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  console.log(isAuthenticated);
 
   useEffect(() => {
     dispatch(loadUser());
@@ -39,6 +42,10 @@ function App() {
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/product/:name" element={<ProductsDetailsPage />} />
+        <Route path="/profile/" element={
+          <ProtectedRoute isAuthenticated={isAuthenticated}>
+          <ProfilePage/>
+        </ProtectedRoute>} />
 
       </Routes>
 

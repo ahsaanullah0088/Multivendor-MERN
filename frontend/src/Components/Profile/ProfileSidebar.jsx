@@ -26,7 +26,7 @@ const ProfileSidebar = ({ active, setActive }) => {
       .get(`${server}/user/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
-        navigate("/login");
+        navigate("/login");   
         window.location.reload(true);
       })
       .catch((error) => {
@@ -89,7 +89,7 @@ const ProfileSidebar = ({ active, setActive }) => {
       >
         <MdOutlineTrackChanges size={20} color={active === 5 ? "red" : ""} />
         <span
-          className={`pl-3 ${active === 5 ? "text-[red]" : ""}md:block hidden `}
+          className={`pl-3 ${active === 5 ? "text-[red]" : ""} md:block hidden`}
         >
           Track Order
         </span>
@@ -101,7 +101,7 @@ const ProfileSidebar = ({ active, setActive }) => {
       >
         <AiOutlineCreditCard size={20} color={active === 6 ? "red" : ""} />
         <span
-          className={`pl-3 ${active === 6 ? "text-[red]" : ""}md:block hidden `}
+          className={`pl-3 ${active === 6 ? "text-[red]" : ""} md:block hidden`}
         >
           Payment Methods
         </span>

@@ -20,7 +20,6 @@ import ProtectedRoute from "./ProtectedRoute";
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  console.log(isAuthenticated);
 
   useEffect(() => {
     dispatch(loadUser());

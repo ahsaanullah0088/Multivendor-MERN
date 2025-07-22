@@ -104,7 +104,7 @@ const Header = ({ activeHeading }) => {
 
           {/* Seller Button */}
           <div className="w-[150px] bg-black h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer z-10">
-            <Link to="/seller">
+            <Link to="/shop-create">
               <h1 className="text-white items-center text-[16px] flex z-[10]">
                 become Seller <IoIosArrowForward className="ml-1" />
               </h1>

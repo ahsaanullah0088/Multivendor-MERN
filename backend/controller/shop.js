@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
-const { isAuthenticated, isSeller } = require("../middleware/auth");
+const { isAuthenticated, isSeller, isseller } = require("../middleware/auth");
 const ErrorHandler = require("../utils/ErrorHandler");
 const Shop = require("../model/shop");
 const { upload } = require("../multer");
@@ -142,7 +142,7 @@ router.post(
 
 router.get(
   "/getSeller",
-  isSeller,
+  isseller,
   catchAsyncErrors(async (req, res, next) => {
     try {
         // console.log(req.user);

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route,  } from "react-router-dom";
 import {
   LoginPage,
   SignUpPage,
@@ -15,23 +15,31 @@ import {
   SellerActivationPage,
   
 } from "./Routes.js";
+import {ShopHomePage} from "./ShopRoutes.js"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadUser } from "./redux/actions/user.js";
+import { loadSeller, loadUser } from "./redux/actions/user.js";
 import ProtectedRoute from "./ProtectedRoute";
+import SellerProtectedRoute from "./SellerProtectedRoute.jsx";
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
+  const { isLoading, isSeller , seller } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
+    // console.log(isSeller , seller);
+    // console.log(seller._id)
 
   useEffect(() => {
     dispatch(loadUser());
+    dispatch(loadSeller());
+    
   }, [dispatch]);
 
   return (
-    <BrowserRouter>
+   <>{ !isLoading && (
+     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -57,6 +65,10 @@ function App() {
         <Route path="/product/:name" element={<ProductsDetailsPage />} />
         <Route path="/shop-create" element={<ShopCreatePage />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
+        <Route path="/shop/:id" element={<SellerProtectedRoute isSeller={isSeller}>
+          <ShopHomePage />
+        </SellerProtectedRoute>} />
+
 
         <Route path="/profile/" element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -78,6 +90,8 @@ function App() {
         theme="dark"
       />
     </BrowserRouter>
+   )}
+   </>
   );
 }
 

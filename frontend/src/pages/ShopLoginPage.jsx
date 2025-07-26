@@ -12,7 +12,7 @@ const ShopLoginPage = () => {
   // console.log(seller._id);
   useEffect(()=>{
     if(isSeller){
-      navigate(`/shop/${seller._id}`);
+      navigate(`/dashboard`);
     }
 
   })

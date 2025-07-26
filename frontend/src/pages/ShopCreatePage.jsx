@@ -8,7 +8,7 @@ const ShopCreatePage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (isSeller) {
-      navigate(`/shop/${seller._id} `);
+      navigate(`/dashboard} `);
     }
   }, []);
   return (

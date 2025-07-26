@@ -13,20 +13,22 @@ import {
   ShopCreatePage,
   CheckoutPage,
   SellerActivationPage,
+  OrderSuccessPage,
   
 } from "./Routes.js";
-import {ShopHomePage} from "./ShopRoutes.js"
+import {ShopHomePage , ShopDashboardPage} from "./ShopRoutes.js"
 import { ToastContainer } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadSeller, loadUser } from "./redux/actions/user.js";
-import ProtectedRoute from "./ProtectedRoute";
-import SellerProtectedRoute from "./SellerProtectedRoute.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
-  const { isLoading, isSeller , seller } = useSelector((state) => state.seller);
+  const {  isSeller  } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
     // console.log(isSeller , seller);
     // console.log(seller._id)
@@ -38,9 +40,8 @@ function App() {
   }, [dispatch]);
 
   return (
-   <>{ !isLoading && (
      <BrowserRouter>
-      <Routes>
+      <Routes>s
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
@@ -54,6 +55,10 @@ function App() {
         />
         
         <Route path="/products" element={<ProductsDetailsPage />} />
+        <Route path="/dashboard" element={<SellerProtectedRoute>
+          <ShopDashboardPage />
+        </SellerProtectedRoute>} />
+
         <Route path="/best-selling" element={<BestSellingPage />} />
                 <Route path="/checkout" element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -62,6 +67,8 @@ function App() {
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/order/success/:id" element={<OrderSuccessPage />} />
+
         <Route path="/product/:name" element={<ProductsDetailsPage />} />
         <Route path="/shop-create" element={<ShopCreatePage />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
@@ -90,8 +97,6 @@ function App() {
         theme="dark"
       />
     </BrowserRouter>
-   )}
-   </>
   );
 }
 

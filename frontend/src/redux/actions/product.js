@@ -25,48 +25,48 @@ export const createProduct = (newForm) => async (dispatch) => {
   }
 };
 
-//get all products
-// export const getAllProductsShop = (id) => async (dispatch) => {
-//   try {
-//     dispatch({
-//       type: "getAllProductsShopRequest",
-//     });
-
-//     const { data } = await axios.get(
-//       `${server}/product/get-all-products-shop/${id}`
-//     );
-//     dispatch({
-//       type: "getAllProductsShopSuccess",
-//       payload: data.products,
-//     });
-//   } catch (error) {
-//     dispatch({
-//       type: "getAllProductsShopFailed",
-//       payload: error.response.data.message,
-//     });
-//   }
-// };
-// export const deleteProduct = (id) => async (dispatch) => {
-//   try {
-//     dispatch({
-//       type: "deleteProductRequest",
-//     });
-
-//     const { data } = await axios.delete(
-//       `${server}/product/delete-shop-product/${id}`,{withCredentials:true}
-//     );
-//     dispatch({
-//       type: "deleteProductSuccess",
-//       payload: data.message,
-//     });
-//   } catch (error) {
-//     dispatch({
-//       type: "getAllProductsShopFailed",
-//       payload: error.response.data.message,
-//     });
-//   }
-// };
 // get all products
+export const getAllProductsShop = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getAllProductsShopRequest",
+      });
+
+    const { data } = await axios.get(
+      `${server}/product/get-all-products-shop/${id}`
+    );
+    dispatch({
+      type: "getAllProductsShopSuccess",
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAllProductsShopFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+export const deleteProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "deleteProductRequest",
+    });
+
+    const { data } = await axios.delete(
+      `${server}/product/delete-shop-product/${id}`,{withCredentials:true}
+    );
+    dispatch({
+      type: "deleteProductSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAllProductsShopFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+// // get all products
 // export const getAllProducts = () => async (dispatch) => {
 //   try {
 //     dispatch({

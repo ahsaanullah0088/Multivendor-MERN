@@ -25,7 +25,6 @@ if (process.env.NODE_ENV === "PRODUCTION") {
 // Importing routes
 const user = require("./controller/userController");
 const shop = require("./controller/shop.js");
-
 const product = require("./controller/product.js");
 
 

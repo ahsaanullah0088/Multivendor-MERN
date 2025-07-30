@@ -5,7 +5,7 @@ const { upload } = require("../multer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const Shop = require("../model/shop");
-const { isSeller } = require("../middleware/auth");
+const { isseller } = require("../middleware/auth");
 const fs = require("fs");
 
 // Create a new product
@@ -53,42 +53,42 @@ router.get(
     }
   })
 );
-// // delete product
-// router.delete(
-//   "/delete-shop-product/:id",
-//   isSeller,
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const productId = req.params.id;
+// delete product
+router.delete(
+  "/delete-shop-product/:id",
+  isseller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const productId = req.params.id;
 
-//       const productData = await Product.findById(productId);
-//       productData.images.forEach((imageUrl) => {
-//         const filename = imageUrl;
-//         const filePath = `uploads/${filename}`;
-//         fs.unlink(filePath, (err) => {
-//           if (err) {
-//             console.log(err);
-//             return res.status(500).json({ message: "Error deleting file" });
-//           }
-//         });
-//       });
+      // const productData = await Product.findById(productId);
+      // productData.images.forEach((imageUrl) => {
+      //   const filename = imageUrl;
+      //   const filePath = `uploads/${filename}`;
+      //   fs.unlink(filePath, (err) => {
+      //     if (err) {
+      //       console.log(err);
+      //       return res.status(500).json({ message: "Error deleting file" });
+      //     }
+      //   });
+      // });
 
-//       const product = await Product.findByIdAndDelete(productId);
+      const product = await Product.findByIdAndDelete(productId);
 
-//       if (!product) {
-//         return next(new ErrorHandler("Product not found with this id", 500));
-//       }
-//       res.status(201).json({
-//         success: true,
-//         message: "Product Deleted Successfully!",
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error, 400));
-//     }
-//   })
-// );
+      if (!product) {
+        return next(new ErrorHandler("Product not found with this id", 500));
+      }
+      res.status(201).json({
+        success: true,
+        message: "Product Deleted Successfully!",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
 
-// // get all products
+// get all products
 // router.get(
 //   "/get-all-products",
 //   catchAsyncErrors(async (req, res, next) => {

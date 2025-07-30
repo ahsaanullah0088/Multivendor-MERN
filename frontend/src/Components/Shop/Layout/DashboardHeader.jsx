@@ -6,11 +6,11 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import getImageUrl from "../../../utils/getImageUrl";
-import { sellerReducer } from "../../../redux/reducers/seller";
 
 const DashboardHeader = () => {
-  const { seller , isSeller } = useSelector((state) => state.seller);
-  console.log(seller._id)
+  const { seller } = useSelector((state) => state.seller);// or a loading message
+
+  // console.log(seller._id)
   return (
     <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
       <div>

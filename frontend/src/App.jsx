@@ -16,7 +16,7 @@ import {
   OrderSuccessPage,
   
 } from "./Routes.js";
-import {ShopHomePage , ShopDashboardPage , ShopCreateProduct} from "./ShopRoutes.js"
+import {ShopHomePage , ShopDashboardPage , ShopCreateProduct , ShopAllProduct} from "./ShopRoutes.js"
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -59,6 +59,8 @@ function App() {
           <ShopDashboardPage />
         </SellerProtectedRoute>} />
         <Route path="/dashboard-create-product" element={<ShopCreateProduct/>} />
+        <Route path="/dashboard-products" element={<ShopAllProduct/>} />
+
 
 
         <Route path="/best-selling" element={<BestSellingPage />} />

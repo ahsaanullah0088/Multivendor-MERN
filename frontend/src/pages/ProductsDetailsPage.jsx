@@ -1,30 +1,50 @@
-import React, { useEffect } from 'react'
-import Header from '../Components/Layout/Header'
-import Footer from '../Components/Layout/Footer'
-import ProductDetails from '../Components/ProductDetails/ProductDetails.jsx'
-import { productData } from '../static/data.jsx'
-import { useParams } from 'react-router-dom'
-import SuggestedProducts from '../Components/ProductDetails/SuggestedProducts.jsx'
+import React, { useEffect, useState } from "react";
 
-const ProductsDetailsPage = () => {
-        const {name} = useParams();
-    const [data, setData] = React.useState(null);
-    const productName = name.replace(/-/g, " ");
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../redux/actions/product"; // If you have this action
+import Header from "../Components/Layout/Header.jsx";
+import Footer from "../Components/Layout/Footer.jsx";
+import ProductDetails from "../Components/ProductDetails/ProductDetails.jsx"; // Adjust the import path as necessary
+import SuggestedProduct from "../Components/Products/SuggestedProducts.jsx"
 
-    useEffect(() => {
-        const data = productData.find((i)=> i.name === productName);
-        setData(data);
-    },[])
+const ProductDetailsPage = () => {
+  const { allProducts } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  const { name } = useParams();
+  const [data, setData] = useState(null);
+  const productName = name.replace(/-/g, " ");
+
+  useEffect(() => {
+    // If allProducts might be empty on reload, fetch them
+    if (!allProducts || allProducts.length === 0) {
+      dispatch(getAllProducts());
+    }
+  }, [dispatch, allProducts]);
+
+  useEffect(() => {
+    if (allProducts && allProducts.length > 0) {
+      const found = allProducts.find(
+        (item) => item.name.toLowerCase() === productName.toLowerCase()
+      );
+      setData(found || null);
+    }
+  }, [allProducts, productName]);
+
   return (
     <div>
-        <Header/>
-        <ProductDetails data = {data}/>
-        {
-            data && <SuggestedProducts data={data} />
-        }
-        <Footer/>
+      <Header />
+      {data ? (
+        <>
+          <ProductDetails data={data} />
+          <SuggestedProduct data={data} />
+        </>
+      ) : (
+        <div className="py-16 text-center text-gray-500">Loading product...</div>
+      )}
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ProductsDetailsPage
+export default ProductDetailsPage;

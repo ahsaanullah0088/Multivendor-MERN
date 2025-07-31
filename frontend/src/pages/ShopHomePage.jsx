@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from '../styles/styles'
-import ShopInfo from "../../Components/Shop/ShopInfo.jsx"
-import ShopProfileData from "../../Components/Shop/ShopProfileData.jsx"
+import ShopInfo from "../Components/Shop/ShopInfo.jsx"
+import ShopProfileData from "../Components/Shop/ShopProfileData.jsx"
 
 const ShopHomePage = () => {
   return (

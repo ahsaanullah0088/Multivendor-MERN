@@ -61,17 +61,17 @@ router.delete(
     try {
       const productId = req.params.id;
 
-      // const productData = await Product.findById(productId);
-      // productData.images.forEach((imageUrl) => {
-      //   const filename = imageUrl;
-      //   const filePath = `uploads/${filename}`;
-      //   fs.unlink(filePath, (err) => {
-      //     if (err) {
-      //       console.log(err);
-      //       return res.status(500).json({ message: "Error deleting file" });
-      //     }
-      //   });
-      // });
+      const productData = await Product.findById(productId);
+      productData.images.forEach((imageUrl) => {
+        const filename = imageUrl;
+        const filePath = `uploads/${filename}`;
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({ message: "Error deleting file" });
+          }
+        });
+      });
 
       const product = await Product.findByIdAndDelete(productId);
 
@@ -89,19 +89,19 @@ router.delete(
 );
 
 // get all products
-// router.get(
-//   "/get-all-products",
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const products = await Product.find().sort({ createdAt: -1 });
-//       res.status(201).json({
-//         success: true,
-//         products, 
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error, 400));
-//     }
-//   })
-// );
+router.get(
+  "/get-all-products",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const products = await Product.find().sort({ createdAt: -1 });
+      res.status(201).json({
+        success: true,
+        products, 
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
 
 module.exports = router;

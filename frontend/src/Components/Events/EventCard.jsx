@@ -1,53 +1,45 @@
 import React from "react";
 import styles from "../../styles/styles";
-import CountDown from "./CountDown"; // You can replace or remove this if needed
-import { Link } from "react-router-dom";
+import CountDown from "./CountDown.jsx";
+import getImageUrl from "../../utils/getimageurl.js";
 
-const EventCard = ({active}) => {
+const EventCard = ({ active, data }) => {
+  // console.log(data);
   return (
-    <div className={`w-full block bg-white rounded-lg ${active ? "unset" : "mb-12"}  shadow-md mb-18 lg:flex p-4`}>
-      {/* Left: Image */}
+    <div
+      className={`w-full block bg-white rounded-lg lg:flex p-4 mb-12 ${
+        active ? "unset" : "mb-12"
+      }`}
+    >
+      {/* Left Image Section */}
       <div className="w-full lg:w-1/2 flex justify-center items-center">
         <img
-          src="https://m.media-amazon.com/images/I/81CgtwSII3L._AC_UF894,1000_QL80_.jpg"
-          alt="iPhone"
-          className="max-h-[300px] w-full object-contain"
+          src={getImageUrl(data?.images[0])}
+        alt=""
+          className="max-h-[300px] w-auto object-contain rounded-md"
         />
       </div>
 
-      {/* Right: Info */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-4 mt-6 lg:mt-0">
-        <h2 className={`${styles.productTitle} text-[24px] mb-2`}>
-          iPhone 18 Pro Max
-          <br />
-          8/256
-        </h2>
+      {/* Right Content Section */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center mt-4 lg:mt-0 lg:pl-6">
+        <h2 className={`${styles.productTitle}`}>{data.name}</h2>
+        <p className="text-gray-700">{data.description}</p>
 
-        <p className="text-gray-700 text-[15px] leading-6 mb-4">
-          The latest iPhone with ultra-fast performance, stunning display, and incredible camera. Limited time offer!
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Error ut, voluptatum odio explicabo distinctio id amet dolor facere, molestiae culpa consequuntur odit, maiores nihil nam corporis in est cum officia!
-        </p>
-
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <span className="text-[#d55b45] line-through text-[18px] pr-2">
-              1099$
-            </span>
-            <span className="text-[#333] font-bold text-[20px]">999$</span>
+        <div className="flex py-2 justify-between">
+          <div className="flex">
+            <h5 className="font-medium text-[18px] text-[#d55b45] pr-3 line-through">
+              {data.originalPrice}$
+            </h5>
+            <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
+              {data.discountPrice}$
+            </h5>
           </div>
-          <span className="text-[#44a55e] text-[16px]">22 sold</span>
+          <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
+            {data.sold_out} sold
+          </span>
         </div>
 
-        {/* Optional Countdown (can be commented out if not used) */}
-        <CountDown />
-
-        <div className="flex items-center mt-5">
-          <Link to="/product/1?isEvent=true">
-            <div className={`${styles.button} text-white`}>
-              See Details
-            </div>
-          </Link>
-        </div>
+        <CountDown data={data} />
       </div>
     </div>
   );

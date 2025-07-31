@@ -14,6 +14,7 @@ import {
   CheckoutPage,
   SellerActivationPage,
   OrderSuccessPage,
+  ProductsPage,
   
 } from "./Routes.js";
 import {ShopHomePage , ShopDashboardPage , ShopCreateProduct , ShopAllProduct , ShopCreateEvents , ShopAllEvents , ShopAllCoupouns , ShopPreviewPage} from "./ShopRoutes.js"
@@ -25,6 +26,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadSeller, loadUser } from "./redux/actions/user.js";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
+import { getAllEvents } from "./redux/actions/event.js";
+import { getAllProducts } from "./redux/actions/product.js";
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -36,12 +39,14 @@ function App() {
   useEffect(() => {
     dispatch(loadUser());
     dispatch(loadSeller());
+    dispatch(getAllEvents());
+    dispatch(getAllProducts());
     
   }, [dispatch]);
 
   return (
      <BrowserRouter>
-      <Routes>s
+      <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
@@ -54,7 +59,7 @@ function App() {
           element={<SellerActivationPage />}
         />
         
-        <Route path="/products" element={<ProductsDetailsPage />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/dashboard" element={<SellerProtectedRoute>
           <ShopDashboardPage />
         </SellerProtectedRoute>} />

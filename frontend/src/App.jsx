@@ -58,8 +58,10 @@ function App() {
           path="/seller/activation/:activation_token"
           element={<SellerActivationPage />}
         />
-        
-        <Route path="/products" element={<ProductsPage />} />
+
+        <Route path="/products" element={<SellerProtectedRoute isSeller={isSeller}>
+          <ProductsPage />
+        </SellerProtectedRoute>} />
         <Route path="/dashboard" element={<SellerProtectedRoute>
           <ShopDashboardPage />
         </SellerProtectedRoute>} />

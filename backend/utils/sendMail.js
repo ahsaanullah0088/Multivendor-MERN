@@ -1,10 +1,4 @@
-
 const nodemailer = require("nodemailer");
-// add dot env
-require("dotenv").config();
-
-
-
 const sendMail = async (options) => {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -13,7 +7,6 @@ const sendMail = async (options) => {
     auth: {
       user: process.env.SMTP_MAIL,
       pass: process.env.SMTP_PASSWORD,
-
     },
   });
   const mailOptions = {
@@ -24,7 +17,4 @@ const sendMail = async (options) => {
   };
   await transporter.sendMail(mailOptions);
 };
-
-
-
 module.exports = sendMail;

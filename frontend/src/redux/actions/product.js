@@ -1,6 +1,7 @@
-import axios from "axios";
 import { server } from "../../server";
+import axios from "axios";
 
+// create product
 export const createProduct = (newForm) => async (dispatch) => {
   try {
     dispatch({
@@ -8,6 +9,7 @@ export const createProduct = (newForm) => async (dispatch) => {
     });
 
     const config = { headers: { "Content-Type": "multipart/form-data" } };
+
     const { data } = await axios.post(
       `${server}/product/create-product`,
       newForm,
@@ -15,22 +17,26 @@ export const createProduct = (newForm) => async (dispatch) => {
     );
     dispatch({
       type: "productCreateSuccess",
-      payload: data.payload,
+      payload: data.product,
     });
   } catch (error) {
     dispatch({
       type: "productCreateFail",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong",
     });
   }
 };
 
-// get all products
+//get ALl Products
+
 export const getAllProductsShop = (id) => async (dispatch) => {
   try {
     dispatch({
       type: "getAllProductsShopRequest",
-      });
+    });
 
     const { data } = await axios.get(
       `${server}/product/get-all-products-shop/${id}`
@@ -46,6 +52,9 @@ export const getAllProductsShop = (id) => async (dispatch) => {
     });
   }
 };
+
+// delete product of a shop
+
 export const deleteProduct = (id) => async (dispatch) => {
   try {
     dispatch({
@@ -53,20 +62,23 @@ export const deleteProduct = (id) => async (dispatch) => {
     });
 
     const { data } = await axios.delete(
-      `${server}/product/delete-shop-product/${id}`,{withCredentials:true}
+      `${server}/product/delete-shop-product/${id}`,
+      { withCredentials: true }
     );
+
     dispatch({
       type: "deleteProductSuccess",
       payload: data.message,
     });
   } catch (error) {
     dispatch({
-      type: "getAllProductsShopFailed",
+      type: "deleteProductFailed",
       payload: error.response.data.message,
     });
   }
 };
-// get all products
+
+//get all products of all shops
 export const getAllProducts = () => async (dispatch) => {
   try {
     dispatch({

@@ -1,22 +1,22 @@
-import React from 'react'
-import DashboardHeader from '../../Components/Shop/Layout/DashboardHeader'
-import DashboardSideBar from '../../Components/Shop/Layout/DashboardSidebar.jsx'
-import CreateEvent from "../../Components/Shop/CreateEvent.jsx"
+import React from "react";
+import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import DashboardSidebar from "../../components/Shop/Layout/DashboardSidebar";
+import CreateEvent from "../../components/Shop/CreateEvent";
 
-const ShopCreateEvents = () => {
+function ShopCreateEvents() {
   return (
-   <div>
+    <div>
       <DashboardHeader />
-      <div className="flex items-start justify-between w-full">
-        <div className="w-[80px] md:w-[330px]  ">
-          <DashboardSideBar active={6} />
+      <div className="flex items-center justify-between w-full">
+        <div className="w-[330px]">
+          <DashboardSidebar active={6} />
         </div>
         <div className="w-full justify-center flex">
-          <CreateEvent/>
+          <CreateEvent />
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ShopCreateEvents
+export default ShopCreateEvents;

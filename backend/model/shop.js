@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-
 const jwt = require("jsonwebtoken");
-
 
 const shopSchema = new mongoose.Schema({
   name: {
@@ -11,12 +9,12 @@ const shopSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, "Please enter your shop email!"],
+    required: [true, "Please enter your shop email address"],
   },
   password: {
     type: String,
     required: [true, "Please enter your password"],
-    minLength: [4, "Password should be greater than 4 characters"],
+    minLength: [6, "Password should be greater than 6 characters"],
     select: false,
   },
   description: {
@@ -24,30 +22,50 @@ const shopSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    required: [true, "Please enter your shop address!"],
+    required: true,
   },
   phoneNumber: {
     type: Number,
-    required: [true, "Please enter your shop phone number!"],
+    required: true,
   },
   role: {
     type: String,
-    default: "seller",
+    default: "Seller",
   },
-  avatar:{
-    public_id: {
-      type: String,
-      // required: true,
-    },
-    url: {
-      type: String,
-      required: true,
-    },
- },
+  avatar: {
+    type: String,
+    required: true,
+  },
   zipCode: {
     type: Number,
-    required: [true, "Please enter your shop zip code!"],
+    required: true,
   },
+  withdrawMethod: {
+    type: Object,
+  },
+  availableBalance: {
+    type: Number,
+    default: 0,
+  },
+  transections: [
+    {
+      amount: {
+        type: Number,
+        required: true,
+      },
+      status: {
+        type: String,
+        default: "Processing",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now(),
+      },
+      updatedAt: {
+        type: Date,
+      },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -56,26 +74,25 @@ const shopSchema = new mongoose.Schema({
   resetPasswordTime: Date,
 });
 
-//  Hash password
+// Hash password before saving to database
 shopSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    return next(); // ✅ Fix: use return
+    return next();
   }
 
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-// jwt token
+// Generate JWT token for authentication
 shopSchema.methods.getJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRES,
   });
 };
 
-// compare password
+// Compare entered password with stored hashed password
 shopSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
-
 
 module.exports = mongoose.model("Shop", shopSchema);

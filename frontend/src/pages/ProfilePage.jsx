@@ -1,22 +1,22 @@
-import React from "react";
-import Header from "../Components/Layout/Header.jsx";
+import React, { useState } from "react";
+import Header from "../components/Layout/Header";
 import styles from "../styles/styles";
-import ProfileSidebar from "../Components/Profile/ProfileSidebar.jsx";
-import ProfileContent from "../Components/Profile/ProfileContent.jsx";
+import ProfileSidebar from "../components/Profile/ProfileSidebar";
+import ProfileContent from "../components/Profile/ProfileContent";
 
-const ProfilePage = () => {
-  const [active, setActive] = React.useState(1);
+function ProfilePage() {
+  const [active, setActive] = useState(1);
   return (
     <div>
       <Header />
-      <div className={`${styles.section} flex bg-[#f5f5f5] py-10 min-h-screen`}>
-        <div className=" w-[335px] sticky mt-[16%] md:mt-0 ">
+      <div className={`${styles.section} flex bg-amber-100 py-10`}>
+        <div className="w-[335px] ">
           <ProfileSidebar active={active} setActive={setActive} />
         </div>
-        <ProfileContent active={active} />
+        <ProfileContent active={active} setActive={setActive} />
       </div>
     </div>
   );
-};
+}
 
 export default ProfilePage;

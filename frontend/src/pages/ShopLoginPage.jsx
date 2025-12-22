@@ -1,26 +1,22 @@
-import React from 'react'
-import  ShopLogin  from '../Components/Shop/ShopLogin.jsx';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-
-const ShopLoginPage = () => {
+import { useEffect } from "react";
+import ShopLogin from "../components/Shop/ShopLogin";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+function ShopLoginPage() {
+  const { isSeller, isloading } = useSelector((state) => state.seller);
+  console.log(isSeller);
   const navigate = useNavigate();
-  const {  isSeller , seller } = useSelector((state) => state.seller);
-
-
-  // console.log(seller._id);
-  useEffect(()=>{
-    if(isSeller){
+  useEffect(() => {
+    if (isSeller === true) {
       navigate(`/dashboard`);
     }
+  }, [isSeller, isloading]);
 
-  })
   return (
     <div>
-      <ShopLogin/> 
+      <ShopLogin />
     </div>
-  )
+  );
 }
 
-export default ShopLoginPage
+export default ShopLoginPage;

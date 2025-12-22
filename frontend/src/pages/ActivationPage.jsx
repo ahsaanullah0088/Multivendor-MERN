@@ -1,46 +1,45 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { server } from "../server";
+import React , {useEffect , useState}from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { server } from '../server';
 
-function ActivationPage() {
+const ActivationPage = () => {
   const { activation_token } = useParams();
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const activationEmail = async () => {
-      try {
-        const res = await axios.post(`${server}/user/activation`, {
-          activation_token,
-        });
-        // console.log(res.data.message);
-      } catch (error) {
-        console.log(error.response?.data?.message || error.message);
-        setError(true);
-      }
-    };
-
-    // 🔄 Call the function here, outside the definition block
-    activationEmail();
-  }, [activation_token]);
+    if (activation_token) {
+      const sendRequest = async () => {
+        await axios
+          .post(`${server}/user/activation`, {
+            activation_token,
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            setError(true);
+          });
+      };
+      sendRequest();
+    }
+  }, []);
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {error ? (
-        <p>Your token is expired</p>
-      ) : (
-        <p>Your account has been created successfully!</p>
-      )}
+    <div className="flex items-center justify-center h-screen w-full bg-gray-100">
+      <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+        {error ? (
+          <p className="text-red-500 font-semibold text-lg">
+            Your token is expired!
+          </p>
+        ) : (
+          <p className="text-green-600 font-semibold text-lg">
+            Your account has been created suceessfully!
+          </p>
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default ActivationPage;

@@ -1,45 +1,43 @@
 const mongoose = require("mongoose");
-const { route } = require("../controller/product.js");
 
 const eventSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please enter your event product name"],
+    required: [true, "Please enter your event product name!"],
   },
   description: {
     type: String,
-    required: [true, "Please enter your event product description"],
+    required: [true, "Please enter your event product description!"],
   },
   category: {
     type: String,
-    required: [true, "Please enter your event product category"],
+    required: [true, "Please enter your event product category!"],
   },
-  start_Date:{
+  start_Date: {
     type: Date,
     required: true,
   },
-  Finish_Date:{
+  Finish_Date: {
     type: Date,
     required: true,
   },
-  status:{
+  status: {
     type: String,
     default: "Running",
   },
   tags: {
     type: String,
-    required: [true, "Please enter your event product tags"],
   },
   originalPrice: {
     type: Number,
   },
   discountPrice: {
     type: Number,
-    required: [true, "Please enter your event product discounted price"],
+    required: [true, "Please enter your event product price!"],
   },
   stock: {
     type: Number,
-    required: [true, "Please enter your event product stock"],
+    required: [true, "Please enter your event product stock!"],
   },
   images: [
     {
@@ -60,7 +58,7 @@ const eventSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
 });
 

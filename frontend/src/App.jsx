@@ -1,108 +1,341 @@
-import { BrowserRouter, Routes, Route,  } from "react-router-dom";
+import "./App.css";
 import {
   LoginPage,
-  SignUpPage,
-  EventsPage,
-  Homepage,
+  SignupPage,
   ActivationPage,
-  BestSellingPage,
-  FaqPage,
-  ProfilePage,
-  ShopLoginPage,
-  ProductsDetailsPage,
-  ShopCreatePage,
-  CheckoutPage,
-  SellerActivationPage,
-  OrderSuccessPage,
+  HomePage,
   ProductsPage,
-  
-} from "./Routes.js";
-import {ShopHomePage , ShopDashboardPage , ShopCreateProduct , ShopAllProduct , ShopCreateEvents , ShopAllEvents , ShopAllCoupouns , ShopPreviewPage} from "./ShopRoutes.js"
-import { ToastContainer } from "react-toastify";
+  BestSellingPage,
+  EventsPage,
+  FAQPage,
+  ProductDetailsPage,
+  ProfilePage,
+  CheckoutPage,
+  ShopCreatePage,
+  SellerActivationPage,
+  ShopLoginPage,
+  PaymentPage,
+  OrderSuccessPage,
+  OrderDetailPage,
+  TrackOrderPage,
+  UserInbox,
+} from "./routes/Routes.jsx";
 
-import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { server } from "./server.js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { store } from "./redux/store.js";
 import { loadSeller, loadUser } from "./redux/actions/user.js";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import ProtectedAdminRoute from "./routes/ProtectedAdminRoute.jsx";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
-import { getAllEvents } from "./redux/actions/event.js";
+import {
+  ShopHomePage,
+  ShopDashboardPage,
+  ShopCreateProduct,
+  ShopAllProducts,
+  ShopCreateEvents,
+  ShopAllEvents,
+  ShopAllCoupons,
+  ShopPreviewPage,
+  ShopAllOrders,
+  ShopOrderDetails,
+  ShopAllRefundsPage,
+  ShopSettingsPage,
+  ShopWithDrawMoneyPage,
+  ShopInboxPage,
+} from "./routes/ShopRoutes.js";
+
+import {
+  AdminDashboardPage,
+  AdminDashboardUsersPage,
+  AdminDashboardSellerPage,
+  AdminDashboardOrdersPage,
+  AdminDashboardProductsPage,
+  AdminDashboardEventsPage,
+  AdminDashboardWithdrawPage,
+} from "./routes/AdminRoutes.js";
 import { getAllProducts } from "./redux/actions/product.js";
+import { getAllEvents } from "./redux/actions/event.js";
 
-function App() {
-  const { isAuthenticated } = useSelector((state) => state.user);
-  const {  isSeller  } = useSelector((state) => state.seller);
-  const dispatch = useDispatch();
-    // console.log(isSeller , seller);
-    // console.log(seller._id)
-
+const App = () => {
+  const [stripeApiKey, setStripeApiKey] = useState("");
+  async function getStripeApikey() {
+    try {
+      const { data } = await axios.get(`${server}/payment/stripe-api-key`);
+      setStripeApiKey(data?.stripeapikey);
+    } catch (error) {
+      toast.error("Error fetching Stripe API key:", error);
+    }
+  }
   useEffect(() => {
-    dispatch(loadUser());
-    dispatch(loadSeller());
-    dispatch(getAllEvents());
-    dispatch(getAllProducts());
-    
-  }, [dispatch]);
+    store.dispatch(loadUser());
+    store.dispatch(loadSeller());
+    store.dispatch(getAllProducts());
+    store.dispatch(getAllEvents());
+    getStripeApikey();
+  }, []);
+
+  console.log(stripeApiKey);
 
   return (
-     <BrowserRouter>
+    <BrowserRouter>
+      {/* Adding the Payment  Page + Stripe Route  */}
+      {stripeApiKey && (
+        <Elements stripe={loadStripe(stripeApiKey)}>
+          <Routes>
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Elements>
+      )}
+
       <Routes>
-        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route
           path="/activation/:activation_token"
           element={<ActivationPage />}
         />
-                <Route
+        <Route
           path="/seller/activation/:activation_token"
           element={<SellerActivationPage />}
         />
-
-        <Route path="/products" element={<SellerProtectedRoute isSeller={isSeller}>
-          <ProductsPage />
-        </SellerProtectedRoute>} />
-        <Route path="/dashboard" element={<SellerProtectedRoute>
-          <ShopDashboardPage />
-        </SellerProtectedRoute>} />
-        <Route path="/dashboard-create-product" element={<ShopCreateProduct/>} />
-        <Route path="/dashboard-products" element={<ShopAllProduct/>} />
-        <Route path="/dashboard-create-event" element={<SellerProtectedRoute>
-          <ShopCreateEvents />
-        </SellerProtectedRoute>} />
-        <Route path="/dashboard-events" element={<SellerProtectedRoute>
-          <ShopAllEvents />
-        </SellerProtectedRoute>} />
-                <Route path="/dashboard-coupouns" element={<SellerProtectedRoute>
-          <ShopAllCoupouns />
-        </SellerProtectedRoute>} />
-          <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
-
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route path="/best-selling" element={<BestSellingPage />} />
-                <Route path="/checkout" element={
-          <ProtectedRoute isAuthenticated={isAuthenticated}>
-          <CheckoutPage/>
-        </ProtectedRoute>} />
         <Route path="/events" element={<EventsPage />} />
-        <Route path="/faq" element={<FaqPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/order/success/:id" element={<OrderSuccessPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+        <Route path="/product/:id" element={<ProductDetailsPage />} />
 
-        <Route path="/product/:name" element={<ProductsDetailsPage />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/inbox"
+          element={
+            <ProtectedRoute>
+              <UserInbox />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/order/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/track/order/:id"
+          element={
+            <ProtectedRoute>
+              <TrackOrderPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* shop routes */}
         <Route path="/shop-create" element={<ShopCreatePage />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
-        <Route path="/shop/:id" element={<SellerProtectedRoute isSeller={isSeller}>
-          <ShopHomePage />
-        </SellerProtectedRoute>} />
+        <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
+        <Route
+          path="/shop/:id"
+          element={
+            <SellerProtectedRoute>
+              <ShopHomePage />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <SellerProtectedRoute>
+              <ShopSettingsPage />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <SellerProtectedRoute>
+              <ShopDashboardPage />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-create-product"
+          element={
+            <SellerProtectedRoute>
+              <ShopCreateProduct />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-create-product"
+          element={
+            <SellerProtectedRoute>
+              <ShopCreateProduct />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-products"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllProducts />
+            </SellerProtectedRoute>
+          }
+        />
 
-
-        <Route path="/profile/" element={
-          <ProtectedRoute isAuthenticated={isAuthenticated}>
-          <ProfilePage/>
-        </ProtectedRoute>} />
-
+        <Route
+          path="/dashboard-orders"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllOrders />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/order/:id"
+          element={
+            <SellerProtectedRoute>
+              <ShopOrderDetails />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-create-events"
+          element={
+            <SellerProtectedRoute>
+              <ShopCreateEvents />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-events"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllEvents />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-coupouns"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllCoupons />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-refunds"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllRefundsPage />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-withdraw-money"
+          element={
+            <SellerProtectedRoute>
+              <ShopWithDrawMoneyPage />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-messages"
+          element={
+            <SellerProtectedRoute>
+              <ShopInboxPage />
+            </SellerProtectedRoute>
+          }
+        />
+        {/* Order SuccessPage */}
+        <Route path="/orders/success" element={<OrderSuccessPage />} />
+        {/* Admin Routes */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-users"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardUsersPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-sellers"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardSellerPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-orders"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardOrdersPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-products"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardProductsPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-events"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardEventsPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-withdraw-request"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardWithdrawPage />
+            </ProtectedAdminRoute>
+          }
+        />
       </Routes>
-
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
@@ -117,6 +350,6 @@ function App() {
       />
     </BrowserRouter>
   );
-}
+};
 
 export default App;

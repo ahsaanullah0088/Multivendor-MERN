@@ -1,25 +1,26 @@
-import React from 'react'
-import Header from '../Components/Layout/Header.jsx'
-import Hero from '../Components/Routes/Hero/Hero.jsx'
-import Categories from '../Components/Routes/Categories/Categories.jsx'
-import BestDeals from '../Components/Routes/BestDeals/BestDeals.jsx'
-import FeaturedPorduct from '../Components/Routes/FeaturedProduct/FeaturedPorduct.jsx'
-import Events from '../Components/Events/Events.jsx'
-import Sponsored from '../Components/Routes/Sponsored/Sponsored.jsx'
-import Footer from '../Components/Layout/Footer.jsx'
-const Homepage = () => {
+import React from "react";
+import Header from "../components/Layout/Header";
+import Hero from "../components/Route/Hero/Hero";
+import Categories from "../components/Route/Categories/Categories";
+import BestDeals from "../components/Route/BestDeals/BestDeals";
+import FeaturedProduct from "../components/Route/FeaturedProduct/FeaturedProduct";
+import Events from "../components/Events/Events";
+import Sponsored from "../components/Route/Sponsored";
+import Footer from "../components/Route/Footer";
+
+const HomePage = () => {
   return (
     <div>
-      <Header/>
-      <Hero/>
-      <Categories/>
-      <BestDeals/>
-      <Events/>
-      <FeaturedPorduct/>
-      <Sponsored/>
-      <Footer/>
+      <Header activeHeading={1} />
+      <Hero />
+      <Categories />
+      <BestDeals />
+      <Events />
+      <FeaturedProduct />
+      <Sponsored />
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Homepage
+export default HomePage;

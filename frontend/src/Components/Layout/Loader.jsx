@@ -1,10 +1,10 @@
 import React from "react";
 import Lottie from "react-lottie";
-import animationData from  "../../assets/Animations/Loading 40 _ Paperplane.json"
+import animationData from "../../assets/Animation/Animation - 1751484261981 (1).json";
 
-const Loader = () => {
+function Loader() {
   const defaultOptions = {
-    loop: true,
+    loop: false,
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
@@ -16,6 +16,6 @@ const Loader = () => {
       <Lottie options={defaultOptions} width={300} height={300} />
     </div>
   );
-};
+}
 
 export default Loader;

@@ -1,54 +1,83 @@
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const { upload } = require("../multer");
 const express = require("express");
+const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/ErrorHandler");
-const Shop = require("../model/shop");
-const { isseller } = require("../middleware/auth");
+const { isSeller } = require("../middleware/auth");
+const CouponCode = require("../model/couponCode");
+
 const router = express.Router();
 
-const CoupounCode = require("../model/coupounCode");
-
-
-router.post("/create-coupon-code", isseller,catchAsyncErrors(async(req,res,next)=>{
+// create coupon
+router.post(
+  "/create-coupon-code",
+  isSeller,
+  catchAsyncError(async (req, res, next) => {
     try {
-        const isCoupounCodeExist = await CoupounCode.find({
-            name: req.body.name,
-        })
-        if(isCoupounCodeExist.length !== 0){
-            return next(new ErrorHandler("Coupoun code already exists!",400));
-        }
-        const couponCode = await CoupounCode.create(req.body);
-        res.status(201).json({
-            success: true,
-            couponCode
-        });
+      const { name, value, minAmount, maxAmount, selectedProducts, shop } =
+        req.body;
+
+      //  required fields only
+      if (!name || !value) {
+        return next(
+          new ErrorHandler("Name and discount percentage are required!", 400)
+        );
+      }
+
+      //  check duplicate for same shop
+      const isCouponExists = await CouponCode.findOne({ name, shop });
+      if (isCouponExists) {
+        return next(
+          new ErrorHandler("Coupon code already exists for this shop!", 400)
+        );
+      }
+
+      //  allow selectedProducts empty
+      const coupon = await CouponCode.create({
+        name,
+        value,
+        minAmount: minAmount || null,
+        maxAmount: maxAmount || null,
+        selectedProducts: selectedProducts || [],
+        shop,
+      });
+
+      res.status(201).json({
+        success: true,
+        coupon,
+      });
     } catch (error) {
-        return next(new ErrorHandler(error, 400));
-        
+      return next(new ErrorHandler(error.message, 400));
     }
-}))
+  })
+);
 
-// get all coupoun codes
+//get all coupons of a shop
 
-router.get("/get-coupon/:id", isseller, catchAsyncErrors(async (req, res, next) => {
+router.get(
+  "/get-coupon/:id",
+  isSeller,
+  catchAsyncError(async (req, res, next) => {
     try {
-        const couponCodes = await CoupounCode.find({ shopId: req.seller.id });
-        res.status(200).json({
-            success: true,
-            couponCodes,
-        });
-    } catch (error) {
-        return next(new ErrorHandler(error, 400));
-    }
-}));
+      const couponCodes = await CouponCode.find({
+        shop: req.params.id,
+      });
 
-// delete coupoun code
+      res.status(201).json({
+        success: true,
+        couponCodes,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// delete coupoun code of a shop
 router.delete(
   "/delete-coupon/:id",
-  isseller,
-  catchAsyncErrors(async (req, res, next) => {
+  isSeller,
+  catchAsyncError(async (req, res, next) => {
     try {
-      const couponCode = await CoupounCode.findByIdAndDelete(req.params.id);
+      const couponCode = await CouponCode.findByIdAndDelete(req.params.id);
 
       if (!couponCode) {
         return next(new ErrorHandler("Coupon code dosen't exists!", 400));
@@ -63,12 +92,12 @@ router.delete(
   })
 );
 
-// get coupon code value by its name
+//get  couponCode Value based on name
 router.get(
   "/get-coupon-value/:name",
-  catchAsyncErrors(async (req, res, next) => {
+  catchAsyncError(async (req, res, next) => {
     try {
-      const couponCode = await CoupounCode.findOne({ name: req.params.name });
+      const couponCode = await CouponCode.findOne({ name: req.params.name });
 
       res.status(200).json({
         success: true,

@@ -1,21 +1,20 @@
-import { Navigate } from "react-router-dom";
-
-import { sellerReducer } from "../redux/reducers/seller.js";
 import { useSelector } from "react-redux";
-import Loader from "../Components/Layout/Loader.jsx";
-
+import { Navigate } from "react-router-dom";
+import Loader from "../components/Layout/Loader";
 
 const SellerProtectedRoute = ({ children }) => {
-    const { isLoading, isSeller  } = useSelector((state) => state.seller);
-  if (isLoading=== true) {
-    return <Loader/>
-  } else{
-    if (!isSeller) {
-    return <Navigate to={`/shop/${sellerReducer._id}`} />;
-  }
-  } 
+  const { isLoading, isSeller } = useSelector((state) => state.seller);
 
-  return children;
+  // While loading, show spinner or placeholder
+  if (isLoading === true) {
+    return <Loader />; // you can use a spinner here
+  } else {
+    if (!isSeller) {
+      return <Navigate to="/shop-login" replace />; //shop-login
+    }
+
+    return children;
+  }
 };
 
 export default SellerProtectedRoute;

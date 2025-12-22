@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
-import ShopCreate from "../Components/Shop/ShopCreate.jsx";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ShopCreate from "../components/Shop/ShopCreate";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const ShopCreatePage = () => {
-  const { isSeller } = useSelector((state) => state.seller);
+  const { isSeller, seller } = useSelector((state) => state.seller);
   const navigate = useNavigate();
   useEffect(() => {
-    if (isSeller) {
-      navigate(`/dashboard} `);
+    if (isSeller && seller) {
+      navigate(`/shop/${seller._id}`);
     }
   }, []);
+  
   return (
     <div>
       <ShopCreate />

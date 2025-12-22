@@ -1,49 +1,67 @@
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const Event = require("../model/event");
-const { upload } = require("../multer");
 const express = require("express");
-const ErrorHandler = require("../utils/ErrorHandler");
+const catchAsyncError = require("../middleware/catchAsyncError");
+const upload = require("../multer");
 const Shop = require("../model/shop");
-const { isseller } = require("../middleware/auth");
+const Event = require("../model/event");
+const ErrorHandler = require("../utils/ErrorHandler");
+const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
 const router = express.Router();
 const fs = require("fs");
+const cloudinary = require("../cloudinary");
 
 router.post(
   "/create-event",
-  upload.array("images"),
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const shopId = req.body.shopId;
-      const shop = await Shop.findById(shopId);
-      if (!shop) {
-        return next(new ErrorHandler("ShopId is invalid!", 400));
-      } else {
-        const files = req.files;
-        const imagesUrls = files.map((file) => `${file.filename}`);
-        const eventData = req.body;
-        eventData.images = imagesUrls;
-        eventData.shop = shop;
+  upload.array("images", 6), // Limit: max 6 images
+  catchAsyncError(async (req, res, next) => {
+    const shopId = req.body.shopId;
+    const shop = await Shop.findById(shopId);
 
-        const event = await Event.create(eventData);
+    if (!shop) return next(new ErrorHandler("Shop Id is invalid", 400));
 
-        res.status(201).json({
-          success: true,
-          event,
-        });
-      }
-    } catch (error) {
-      return next(new ErrorHandler(error, 400));
-    }
+    const files = req.files;
+    if (!files || files.length === 0)
+      return next(new ErrorHandler("Please upload at least one image", 400));
+
+    // Upload all images to Cloudinary
+    const imageUrls = await Promise.all(
+      files.map(
+        (file) =>
+          new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+              { folder: "event_images" },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result.secure_url);
+              }
+            );
+            stream.end(file.buffer);
+          })
+      )
+    );
+
+    // Prepare event data
+    const eventData = {
+      ...req.body,
+      images: imageUrls, // Array of Cloudinary URLs
+      shop: shop._id,
+    };
+
+    const event = await Event.create(eventData);
+
+    res.status(201).json({
+      success: true,
+      event,
+    });
   })
 );
 // get all events of a shop
 
 router.get(
   "/get-all-events/:id",
-  catchAsyncErrors(async (req, res, next) => {
+  catchAsyncError(async (req, res, next) => {
     try {
       const events = await Event.find({ shopId: req.params.id });
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         events,
       });
@@ -53,45 +71,30 @@ router.get(
   })
 );
 
-// get all events 
-router.get(
-  "/get-all-events",
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const events = await Event.find();
-      res.status(200).json({
-        success: true,
-        events  ,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error, 400));
-    }
-  })
-);
+// delete event of a shop
 
-
-// delete product
 router.delete(
   "/delete-shop-event/:id",
-  isseller,
-  catchAsyncErrors(async (req, res, next) => {
+  isSeller,
+  catchAsyncError(async (req, res, next) => {
     try {
       const eventId = req.params.id;
+
       const eventData = await Event.findById(eventId);
-      eventData.images.forEach((imageUrl) => {
-        const filename = imageUrl;
+
+      eventData.images.forEach((imageUrls) => {
+        const filename = imageUrls;
         const filePath = `uploads/${filename}`;
+
         fs.unlink(filePath, (err) => {
           if (err) {
             console.log(err);
-            return res.status(500).json({ message: "Error deleting file" });
           }
         });
       });
       const event = await Event.findByIdAndDelete(eventId);
-
       if (!event) {
-        return next(new ErrorHandler("Event not found with this id", 500));
+        return next(new ErrorHandler("Event not found with this id!", 500));
       }
       res.status(201).json({
         success: true,
@@ -99,6 +102,45 @@ router.delete(
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+//get all events of all shops
+
+router.get(
+  "/get-all-events",
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const events = await Event.find();
+
+      res.json({
+        success: true,
+        events,
+      });
+    } catch (error) {
+      console.log(error);
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+//get all Events ---- (Admin)
+router.get(
+  "/admin-all-events",
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const events = await Event.find().sort({
+        createdAt: -1,
+      });
+      res.status(200).json({
+        success: true,
+        events,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

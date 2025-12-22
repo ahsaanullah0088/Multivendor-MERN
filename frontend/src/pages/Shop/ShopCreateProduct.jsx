@@ -1,15 +1,15 @@
 import React from "react";
-import DashboardHeader from "../../Components/Shop/Layout/DashboardHeader";
-import DashboardSideBar from "../../Components/Shop/Layout/DashboardSidebar";
-import CreateProduct from "../../Components/Shop/CreateProduct.jsx";
+import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import DashboardSidebar from "../../components/Shop/Layout/DashboardSidebar";
+import CreateProduct from "../../components/Products/CreateProduct";
 
-const ShopCreateProduct = () => {
+function ShopCreateProduct() {
   return (
     <div>
       <DashboardHeader />
-      <div className="flex items-start justify-between w-full">
-        <div className="w-[80px] md:w-[330px]  ">
-          <DashboardSideBar active={4} />
+      <div className="flex items-center justify-between w-full">
+        <div className="w-[80px] 800px:w-[330px]">
+          <DashboardSidebar active={4} />
         </div>
         <div className="w-full justify-center flex">
           <CreateProduct />
@@ -17,6 +17,6 @@ const ShopCreateProduct = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ShopCreateProduct;
